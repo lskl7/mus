@@ -10,13 +10,6 @@ from domain.track.duration import Duration
 from domain.track.track import Track
 from domain.track.track_title import TrackTitle
 
-# readline включает стрелки и историю ввода в input().
-# На Windows этого модуля нет, там консоль работает и без него.
-try:
-    import readline  # noqa: F401
-except ImportError:
-    pass
-
 MENU = """
 Меню:
 1 - показать исполнителей
