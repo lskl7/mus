@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<artists>
+    <artist>
+        <id>9c1f2e4a-3b7d-4a58-8f6e-2d0b7c5a1e93</id>
+        <name>Кино</name>
+        <genre>рок</genre>
+    </artist>
+    <artist>
+        <id>e4b8a6d2-7f1c-4e3a-9b5d-6a2c0f8e4d17</id>
+        <name>Земфира</name>
+        <genre>поп</genre>
+    </artist>
+</artists>
