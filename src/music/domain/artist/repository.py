@@ -1,5 +1,4 @@
 from typing import Protocol
-from uuid import UUID
 
 from domain.artist.artist import Artist
 
@@ -10,7 +9,7 @@ class ArtistRepository(Protocol):
     def add(self, artist: Artist) -> None:
         raise NotImplementedError
 
-    def get_by_id(self, artist_id: UUID) -> Artist | None:
+    def get_by_id(self, artist_id: int) -> Artist | None:
         raise NotImplementedError
 
     def get_all(self) -> list[Artist]:
@@ -19,5 +18,5 @@ class ArtistRepository(Protocol):
     def update(self, artist: Artist) -> None:
         raise NotImplementedError
 
-    def delete(self, artist_id: UUID) -> None:
+    def delete(self, artist_id: int) -> None:
         raise NotImplementedError

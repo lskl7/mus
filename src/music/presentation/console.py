@@ -1,7 +1,6 @@
 # readline включает стрелки и историю ввода в input().
 import readline  # noqa: F401
 from collections.abc import Callable
-from uuid import UUID, uuid4
 
 from application.artist_service import ArtistService
 from application.track_service import TrackService
@@ -44,15 +43,6 @@ def ask_int(prompt: str) -> int:
         return int(raw)
     except ValueError as error:
         raise ValidationError("Введите целое число") from error
-
-
-def ask_uuid(prompt: str) -> UUID:
-    raw = read_line(prompt).strip()
-
-    try:
-        return UUID(raw)
-    except ValueError as error:
-        raise ValidationError("Некорректный id") from error
 
 
 # Плоское меню без подменю. Консоль только спрашивает пользователя
@@ -119,7 +109,7 @@ class Console:
 
     def __add_artist(self) -> None:
         artist = Artist(
-            artist_id=uuid4(),
+            artist_id=self.__artist_service.next_id(),
             name=ArtistName(read_line("Имя исполнителя: ")),
             genre=Genre(read_line("Жанр: ")),
         )
@@ -128,7 +118,7 @@ class Console:
         print(f"Исполнитель добавлен, id: {artist.id}")
 
     def __change_artist(self) -> None:
-        artist_id = ask_uuid("id исполнителя: ")
+        artist_id = ask_int("id исполнителя: ")
         name = ArtistName(read_line("Новое имя: "))
         genre = Genre(read_line("Новый жанр: "))
 
@@ -136,7 +126,7 @@ class Console:
         print("Исполнитель изменен")
 
     def __delete_artist(self) -> None:
-        self.__artist_service.delete_artist(ask_uuid("id исполнителя: "))
+        self.__artist_service.delete_artist(ask_int("id исполнителя: "))
         print("Исполнитель удален")
 
     def __show_tracks(self) -> None:
@@ -148,8 +138,8 @@ class Console:
 
     def __add_track(self) -> None:
         track = Track(
-            track_id=uuid4(),
-            artist_id=ask_uuid("id исполнителя: "),
+            track_id=self.__track_service.next_id(),
+            artist_id=ask_int("id исполнителя: "),
             title=TrackTitle(read_line("Название трека: ")),
             duration=Duration(ask_int("Длительность, секунд: ")),
         )
@@ -158,14 +148,14 @@ class Console:
         print(f"Трек добавлен, id: {track.id}")
 
     def __change_title(self) -> None:
-        track_id = ask_uuid("id трека: ")
+        track_id = ask_int("id трека: ")
         title = TrackTitle(read_line("Новое название: "))
 
         self.__track_service.change_title(track_id, title)
         print("Название изменено")
 
     def __delete_track(self) -> None:
-        self.__track_service.delete_track(ask_uuid("id трека: "))
+        self.__track_service.delete_track(ask_int("id трека: "))
         print("Трек удален")
 
     def __print_tracks(self, tracks: list[Track]) -> None:

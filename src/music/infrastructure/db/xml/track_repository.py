@@ -1,6 +1,5 @@
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from uuid import UUID
 
 from domain.exceptions import (
     AlreadyExistsError,
@@ -34,7 +33,7 @@ class XmlTrackRepository:
         records.append(self.__to_element(track))
         write_records(self.__file_path, ROOT, records)
 
-    def get_by_id(self, track_id: UUID) -> Track | None:
+    def get_by_id(self, track_id: int) -> Track | None:
         records = read_records(self.__file_path, ROOT)
         index = self.__find_index(records, track_id)
 
@@ -59,7 +58,7 @@ class XmlTrackRepository:
         records[index] = self.__to_element(track)
         write_records(self.__file_path, ROOT, records)
 
-    def delete(self, track_id: UUID) -> None:
+    def delete(self, track_id: int) -> None:
         records = read_records(self.__file_path, ROOT)
         index = self.__find_index(records, track_id)
 
@@ -71,7 +70,7 @@ class XmlTrackRepository:
 
     @staticmethod
     def __find_index(
-            records: list[ET.Element], track_id: UUID
+            records: list[ET.Element], track_id: int
     ) -> int | None:
         for index, element in enumerate(records):
             if element.findtext("id") == str(track_id):
@@ -93,8 +92,8 @@ class XmlTrackRepository:
     def __to_track(self, element: ET.Element) -> Track:
         try:
             return Track(
-                track_id=UUID(read_text(element, "id")),
-                artist_id=UUID(read_text(element, "artist_id")),
+                track_id=int(read_text(element, "id")),
+                artist_id=int(read_text(element, "artist_id")),
                 title=TrackTitle(read_text(element, "title")),
                 duration=Duration(int(read_text(element, "duration"))),
             )

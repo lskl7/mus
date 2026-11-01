@@ -1,6 +1,5 @@
 from pathlib import Path
 from typing import Any
-from uuid import UUID
 
 from domain.artist.artist import Artist
 from domain.artist.artist_name import ArtistName
@@ -33,7 +32,7 @@ class JsonArtistRepository:
         records.append(self.__to_dict(artist))
         write_records(self.__file_path, ROOT, records)
 
-    def get_by_id(self, artist_id: UUID) -> Artist | None:
+    def get_by_id(self, artist_id: int) -> Artist | None:
         records = read_records(self.__file_path, ROOT)
         index = self.__find_index(records, artist_id)
 
@@ -58,7 +57,7 @@ class JsonArtistRepository:
         records[index] = self.__to_dict(artist)
         write_records(self.__file_path, ROOT, records)
 
-    def delete(self, artist_id: UUID) -> None:
+    def delete(self, artist_id: int) -> None:
         records = read_records(self.__file_path, ROOT)
         index = self.__find_index(records, artist_id)
 
@@ -70,10 +69,10 @@ class JsonArtistRepository:
 
     @staticmethod
     def __find_index(
-            records: list[dict[str, Any]], artist_id: UUID
+            records: list[dict[str, Any]], artist_id: int
     ) -> int | None:
         for index, record in enumerate(records):
-            if record.get("id") == str(artist_id):
+            if record.get("id") == (artist_id):
                 return index
 
         return None
@@ -81,7 +80,7 @@ class JsonArtistRepository:
     @staticmethod
     def __to_dict(artist: Artist) -> dict[str, Any]:
         return {
-            "id": str(artist.id),
+            "id": artist.id,
             "name": artist.name.value,
             "genre": artist.genre.value,
         }
@@ -91,7 +90,7 @@ class JsonArtistRepository:
     def __to_artist(self, record: dict[str, Any]) -> Artist:
         try:
             return Artist(
-                artist_id=UUID(record["id"]),
+                artist_id=int(record["id"]),
                 name=ArtistName(record["name"]),
                 genre=Genre(record["genre"]),
             )

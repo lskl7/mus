@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from domain.track.duration import Duration
 from domain.track.track_title import TrackTitle
 
@@ -9,8 +7,8 @@ from domain.track.track_title import TrackTitle
 class Track:
     def __init__(
             self,
-            track_id: UUID,
-            artist_id: UUID,
+            track_id: int,
+            artist_id: int,
             title: TrackTitle,
             duration: Duration
     ) -> None:
@@ -23,11 +21,11 @@ class Track:
         self.__title = title
 
     @property
-    def id(self) -> UUID:
+    def id(self) -> int:
         return self.__id
 
     @property
-    def artist_id(self) -> UUID:
+    def artist_id(self) -> int:
         return self.__artist_id
 
     @property

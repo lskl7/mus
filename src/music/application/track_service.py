@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from domain.artist.repository import ArtistRepository
 from domain.exceptions import NotFoundError, ValidationError
 from domain.track.repository import TrackRepository
@@ -17,6 +15,11 @@ class TrackService:
         self.__track_repository = track_repository
         self.__artist_repository = artist_repository
 
+    # Новый id на единицу больше самого большого из сохраненных.
+    def next_id(self) -> int:
+        ids = [track.id for track in self.get_all_tracks()]
+        return max(ids, default=0) + 1
+
     def add_track(self, track: Track) -> None:
         if self.__artist_repository.get_by_id(track.artist_id) is None:
             raise NotFoundError(f"Исполнитель {track.artist_id} не найден")
@@ -24,7 +27,7 @@ class TrackService:
         self.__check_title_free(track.artist_id, track.title)
         self.__track_repository.add(track)
 
-    def get_track(self, track_id: UUID) -> Track:
+    def get_track(self, track_id: int) -> Track:
         track = self.__track_repository.get_by_id(track_id)
 
         if track is None:
@@ -44,19 +47,19 @@ class TrackService:
             if needle in track.title.value.casefold()
         ]
 
-    def change_title(self, track_id: UUID, title: TrackTitle) -> None:
+    def change_title(self, track_id: int, title: TrackTitle) -> None:
         track = self.get_track(track_id)
         self.__check_title_free(track.artist_id, title)
 
         track.change_title(title)
         self.__track_repository.update(track)
 
-    def delete_track(self, track_id: UUID) -> None:
+    def delete_track(self, track_id: int) -> None:
         self.get_track(track_id)
         self.__track_repository.delete(track_id)
 
     # У одного исполнителя не может быть двух треков с одинаковым названием.
-    def __check_title_free(self, artist_id: UUID, title: TrackTitle) -> None:
+    def __check_title_free(self, artist_id: int, title: TrackTitle) -> None:
         if any(
             track.artist_id == artist_id
             and track.title.value.casefold() == title.value.casefold()

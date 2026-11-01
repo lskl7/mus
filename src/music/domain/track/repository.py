@@ -1,5 +1,4 @@
 from typing import Protocol
-from uuid import UUID
 
 from domain.track.track import Track
 
@@ -9,7 +8,7 @@ class TrackRepository(Protocol):
     def add(self, track: Track) -> None:
         raise NotImplementedError
 
-    def get_by_id(self, track_id: UUID) -> Track | None:
+    def get_by_id(self, track_id: int) -> Track | None:
         raise NotImplementedError
 
     def get_all(self) -> list[Track]:
@@ -18,5 +17,5 @@ class TrackRepository(Protocol):
     def update(self, track: Track) -> None:
         raise NotImplementedError
 
-    def delete(self, track_id: UUID) -> None:
+    def delete(self, track_id: int) -> None:
         raise NotImplementedError

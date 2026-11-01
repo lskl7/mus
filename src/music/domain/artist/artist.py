@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from domain.artist.artist_name import ArtistName
 from domain.artist.genre import Genre
 
@@ -9,7 +7,7 @@ from domain.artist.genre import Genre
 class Artist:
     def __init__(
             self,
-            artist_id: UUID,
+            artist_id: int,
             name: ArtistName,
             genre: Genre
     ) -> None:
@@ -22,7 +20,7 @@ class Artist:
         self.__genre = genre
 
     @property
-    def id(self) -> UUID:
+    def id(self) -> int:
         return self.__id
 
     @property

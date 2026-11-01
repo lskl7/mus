@@ -1,6 +1,5 @@
 from pathlib import Path
 from typing import Any
-from uuid import UUID
 
 from domain.exceptions import (
     AlreadyExistsError,
@@ -31,7 +30,7 @@ class JsonTrackRepository:
         records.append(self.__to_dict(track))
         write_records(self.__file_path, ROOT, records)
 
-    def get_by_id(self, track_id: UUID) -> Track | None:
+    def get_by_id(self, track_id: int) -> Track | None:
         records = read_records(self.__file_path, ROOT)
         index = self.__find_index(records, track_id)
 
@@ -56,7 +55,7 @@ class JsonTrackRepository:
         records[index] = self.__to_dict(track)
         write_records(self.__file_path, ROOT, records)
 
-    def delete(self, track_id: UUID) -> None:
+    def delete(self, track_id: int) -> None:
         records = read_records(self.__file_path, ROOT)
         index = self.__find_index(records, track_id)
 
@@ -68,10 +67,10 @@ class JsonTrackRepository:
 
     @staticmethod
     def __find_index(
-            records: list[dict[str, Any]], track_id: UUID
+            records: list[dict[str, Any]], track_id: int
     ) -> int | None:
         for index, record in enumerate(records):
-            if record.get("id") == str(track_id):
+            if record.get("id") == (track_id):
                 return index
 
         return None
@@ -79,8 +78,8 @@ class JsonTrackRepository:
     @staticmethod
     def __to_dict(track: Track) -> dict[str, Any]:
         return {
-            "id": str(track.id),
-            "artist_id": str(track.artist_id),
+            "id": track.id,
+            "artist_id": track.artist_id,
             "title": track.title.value,
             "duration": track.duration.seconds,
         }
@@ -89,8 +88,8 @@ class JsonTrackRepository:
     def __to_track(self, record: dict[str, Any]) -> Track:
         try:
             return Track(
-                track_id=UUID(record["id"]),
-                artist_id=UUID(record["artist_id"]),
+                track_id=int(record["id"]),
+                artist_id=int(record["artist_id"]),
                 title=TrackTitle(record["title"]),
                 duration=Duration(record["duration"]),
             )

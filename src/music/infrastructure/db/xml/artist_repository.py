@@ -1,6 +1,5 @@
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from uuid import UUID
 
 from domain.artist.artist import Artist
 from domain.artist.artist_name import ArtistName
@@ -37,7 +36,7 @@ class XmlArtistRepository:
         records.append(self.__to_element(artist))
         write_records(self.__file_path, ROOT, records)
 
-    def get_by_id(self, artist_id: UUID) -> Artist | None:
+    def get_by_id(self, artist_id: int) -> Artist | None:
         records = read_records(self.__file_path, ROOT)
         index = self.__find_index(records, artist_id)
 
@@ -62,7 +61,7 @@ class XmlArtistRepository:
         records[index] = self.__to_element(artist)
         write_records(self.__file_path, ROOT, records)
 
-    def delete(self, artist_id: UUID) -> None:
+    def delete(self, artist_id: int) -> None:
         records = read_records(self.__file_path, ROOT)
         index = self.__find_index(records, artist_id)
 
@@ -74,7 +73,7 @@ class XmlArtistRepository:
 
     @staticmethod
     def __find_index(
-            records: list[ET.Element], artist_id: UUID
+            records: list[ET.Element], artist_id: int
     ) -> int | None:
         for index, element in enumerate(records):
             if element.findtext("id") == str(artist_id):
@@ -95,7 +94,7 @@ class XmlArtistRepository:
     def __to_artist(self, element: ET.Element) -> Artist:
         try:
             return Artist(
-                artist_id=UUID(read_text(element, "id")),
+                artist_id=int(read_text(element, "id")),
                 name=ArtistName(read_text(element, "name")),
                 genre=Genre(read_text(element, "genre")),
             )
